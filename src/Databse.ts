@@ -1,5 +1,7 @@
 import * as dotenv from "dotenv";
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+import FileObj from "./FileObj";
+import { FileInterface, FileModel } from "./schema/FileSchema";
 
 /**
  * Database class to control searching and connection to the server
@@ -20,6 +22,24 @@ class Database{
      */
     public static async disconnect():Promise<void>{
         return mongoose.connection.close();
+    }
+
+    /**
+     * Search database for a file by it's hash
+     * @returns A promise that resolves to a FileObj if found, null if not
+     */
+    public static async searchHash(hash:String):Promise<FileObj>{
+        return new Promise(async (res, rej) => {
+            if(mongoose.connection.readyState != 1){
+                rej("Database is not in a connected state");
+            }
+            let fileModel:FileInterface = (await FileModel.find({hash: hash}))[0];
+            if(fileModel == undefined){
+                res(null);
+            }else{
+                res(FileObj.fromData(fileModel));
+            }
+        })
     }
 
 

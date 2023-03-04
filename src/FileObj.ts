@@ -40,6 +40,7 @@ class FileObj{
         this.model = FileModel;
     }
 
+
     /**
      * Forward facing FileObj creation method, 
      */
@@ -56,6 +57,16 @@ class FileObj{
                 rej(new Error(`Failed to read path: ${absolutePath}`));
             }
         })
+    }
+
+    public static fromData(data:FileInterface){
+        const newFile: FileObj = new FileObj();
+        newFile.absolutePath = data.absolutePath;
+        newFile.fileName = data.fileName;
+        newFile.hash = data.hash;
+        newFile.extension = data.extension;
+
+        return newFile;
     }
 
     /**

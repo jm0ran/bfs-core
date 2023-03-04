@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { model, ObjectId, Schema } from "mongoose";
 
 /**
  * File shcema is in it's own file right now but may eventually be moved to FileObj
@@ -27,10 +27,11 @@ const FileSchema = new mongoose.Schema({
  * Interface used for typescript so I can verify the type of model I'm using
  */
 interface FileInterface{
-    absolutePath: String;
-    fileName: String;
-    hash: String;
-    extension: String;
+    id: ObjectId,
+    absolutePath: string;
+    fileName: string;
+    hash: string;
+    extension: string;
 }
 
 const FileModel = model<FileInterface>("File", FileSchema);
