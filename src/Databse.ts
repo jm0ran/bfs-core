@@ -1,7 +1,8 @@
 import * as dotenv from "dotenv";
 import mongoose, { Document } from "mongoose";
 import FileObj from "./FileObj";
-import { FileInterface, FileModel } from "./schema/FileSchema";
+import FileModel from "./schema/FileSchema";
+import FileInterface from "./FileInterface";
 
 /**
  * Database class to control searching and connection to the server

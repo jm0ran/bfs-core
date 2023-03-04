@@ -1,4 +1,5 @@
 import mongoose, { model, ObjectId, Schema } from "mongoose";
+import FileInterface from "../FileInterface";
 
 /**
  * File shcema is in it's own file right now but may eventually be moved to FileObj
@@ -23,17 +24,8 @@ const FileSchema = new Schema({
     
 )
 
-/**
- * Interface used for typescript so I can verify the type of model I'm using
- */
-interface FileInterface{
-    absolutePath: string;
-    fileName: string;
-    hash: string;
-    extension: string;
-    size: number;
-}
+
 
 const FileModel = model<FileInterface>("File", FileSchema);
 
-export {FileInterface, FileModel};
+export default FileModel;

@@ -1,7 +1,8 @@
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import { FileInterface, FileModel } from "./schema/FileSchema";
+import FileInterface from "./FileInterface";
+import FileModel from "./schema/FileSchema";
 import mongoose, { Document, Model } from "mongoose";
 
 /**
@@ -65,6 +66,11 @@ class FileObj{
         })
     }
 
+    /**
+     * Construct a new FileObject from a data object in the shape of FileInterface
+     * @param data : Object in shape of file interface
+     * @returns New file object
+     */
     public static fromData(data:FileInterface){
         const newFile: FileObj = new FileObj();
         newFile.absolutePath = data.absolutePath;
