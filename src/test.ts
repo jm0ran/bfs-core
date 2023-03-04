@@ -4,25 +4,18 @@
 
 import FileObj from "./FileObj";
 import path from "path";
-import { connectDatabase, disconnectDatabase } from "./services/database.service";
-import mongoose, { Model, Schema } from "mongoose";
-import { FileModel, FileInterface } from "./schema/FileSchema";
+import Database from "./Databse";
 
 
 const fs = require("fs");
 
 async function main(){
-    await connectDatabase();
+    await Database.connect();
     let fileObj: FileObj = await FileObj.init(path.resolve("./tsconfig.json"));
     console.log("Does File Exist:" + await fileObj.existsDB())
     console.log("Adding File: " + await fileObj.saveDB())
     console.log("Does File Exist:" + await fileObj.existsDB())
-    
-    // console.log("Trying");
-    // let test = await fileObj.makeFile()
-    // console.log("Made file");
-    // await test.save();
-    await disconnectDatabase();
+    await Database.disconnect();
 }
 
 main();
