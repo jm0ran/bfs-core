@@ -15,7 +15,6 @@ const FileSchema = new mongoose.Schema({
     },
     {
         versionKey: false,
-        _id: false
     },
     
 )
