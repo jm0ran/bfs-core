@@ -89,8 +89,6 @@ class FileObj{
                 res(true)
             }
         })
-        
-        
     }
 
     /**
@@ -98,8 +96,12 @@ class FileObj{
      * @returns A promise resolving depending on whether the save was successful
      */
     public async saveDB():Promise<boolean>{
-        return new Promise((res, rej) => {
-            res(false);
+        return new Promise(async (res, rej) => {
+            if(!(await this.existsDB())){
+                res(true);
+            }else{
+                res(false);
+            }
         })
     }
 
