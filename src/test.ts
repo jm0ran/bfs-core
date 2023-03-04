@@ -11,13 +11,13 @@ const fs = require("fs");
 
 async function main(){
     await Database.connect();
-    let obj:FileObj = await Database.searchHash("da067b00098439ef20678d2bd257cadc505367a929e1e7154f00439ba5fac479");
-    console.log(obj);
-    console.log(await obj.existsDB());
-    // let fileObj: FileObj = await FileObj.init(path.resolve("./tsconfig.json"));
-    // console.log("Does File Exist:" + await fileObj.existsDB())
-    // console.log("Adding File: " + await fileObj.saveDB())
-    // console.log("Does File Exist:" + await fileObj.existsDB())
+    // let obj:FileObj = await Database.searchHash("da067b00098439ef20678d2bd257cadc505367a929e1e7154f00439ba5fac479");
+    // console.log(obj);
+    // console.log(await obj.existsDB());
+    let fileObj: FileObj = await FileObj.init(path.resolve("./tsconfig.json"));
+    console.log("Does File Exist:" + await fileObj.existsDB())
+    console.log("Adding File: " + await fileObj.saveDB())
+    console.log("Does File Exist:" + await fileObj.existsDB())
     await Database.disconnect();
 }
 

@@ -2,7 +2,7 @@ import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import { FileInterface, FileModel } from "./schema/FileSchema";
-import { Document, Model } from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 
 /**
  * The file object class represents a singular file in the bfs system
@@ -24,6 +24,10 @@ class FileObj{
      * Extension of file
      */
     private extension:string;
+    /**
+     * Size of the file in bytes
+     */
+    private size:number;
     /**
      * Model for the file
      */
@@ -51,6 +55,8 @@ class FileObj{
                 newFile.absolutePath = path.resolve(absolutePath);
                 newFile.fileName = path.basename(absolutePath);
                 newFile.extension = path.extname(absolutePath);
+                let stats = fs.statSync(absolutePath);
+                newFile.size = stats.size;
                 await newFile.makeHash();
                 res(newFile);
             }else{
@@ -109,12 +115,14 @@ class FileObj{
     public async saveDB():Promise<boolean>{
         return new Promise(async (res, rej) => {
             if(!(await this.existsDB())){
-                let fileDoc:Document = new FileModel({
+                let data: FileInterface = {
                     absolutePath: this.absolutePath,
                     fileName: this.fileName,
                     hash: this.hash,
-                    extension: this.extension
-                })
+                    extension: this.extension,
+                    size: this.size
+                }
+                let fileDoc:Document = new FileModel(data);
                 await fileDoc.save();
                 res(true);
             }else{

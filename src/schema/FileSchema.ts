@@ -8,7 +8,7 @@ import mongoose, { model, ObjectId, Schema } from "mongoose";
  * Mongoose File Schema
  * The data structure for how my file objects will be stored in the database
  */
-const FileSchema = new mongoose.Schema({
+const FileSchema = new Schema({
     absolutePath: String,
     fileName: String,
     hash: {
@@ -27,11 +27,11 @@ const FileSchema = new mongoose.Schema({
  * Interface used for typescript so I can verify the type of model I'm using
  */
 interface FileInterface{
-    id: ObjectId,
     absolutePath: string;
     fileName: string;
     hash: string;
     extension: string;
+    size: number;
 }
 
 const FileModel = model<FileInterface>("File", FileSchema);
