@@ -15,6 +15,7 @@ async function main(){
     await connectToDatabase();
     let fileObj: FileObj = await FileObj.init(path.resolve("./tsconfig.json"));
     console.log(fileObj.toString());
+    console.log(await fileObj.existsDB())
     // console.log("Trying");
     // let test = await fileObj.makeFile()
     // console.log("Made file");

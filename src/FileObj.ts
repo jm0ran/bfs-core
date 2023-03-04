@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import { FileInterface } from "./schema/FileSchema";
+import { FileInterface, FileModel } from "./schema/FileSchema";
 import { Model } from "mongoose";
 
 /**
@@ -37,7 +37,7 @@ class FileObj{
         this.fileName = null;
         this.hash = null;
         this.extension = null;
-        this.model = null;
+        this.model = FileModel;
     }
 
     /**
@@ -82,9 +82,15 @@ class FileObj{
      * @returns a promise resolving to a boolean representing if the file exists in the database
      */
     public async existsDB():Promise<Boolean>{
-        return new Promise((res, rej) => {
-            res(false);
-        }) 
+        return new Promise(async(res, rej) => {
+            if(await FileModel.exists({hash: this.hash})){
+                res(true)
+            }else{
+                res(true)
+            }
+        })
+        
+        
     }
 
     /**
@@ -97,6 +103,9 @@ class FileObj{
         })
     }
 
+    /**
+     * @returns String representation of the object
+     */
     public toString():string{
         return `File: ${this.fileName} \n\t Path: ${this.absolutePath} \n\t Hash:${this.hash}`;
     }
