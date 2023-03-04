@@ -71,7 +71,7 @@ class FileObj{
         newFile.fileName = data.fileName;
         newFile.hash = data.hash;
         newFile.extension = data.extension;
-
+        newFile.size = data.size;
         return newFile;
     }
 
