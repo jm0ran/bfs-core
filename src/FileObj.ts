@@ -71,7 +71,7 @@ class FileObj{
      * @param data : Object in shape of file interface
      * @returns New file object
      */
-    public static fromData(data:FileInterface){
+    public static fromData(data:FileInterface):FileObj{
         const newFile: FileObj = new FileObj();
         newFile.absolutePath = data.absolutePath;
         newFile.fileName = data.fileName;
