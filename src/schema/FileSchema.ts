@@ -1,5 +1,5 @@
 import mongoose, { model, ObjectId, Schema } from "mongoose";
-import FileInterface from "../FileInterface";
+import FileInterface from "../interfaces/FileInterface";
 
 /**
  * File shcema is in it's own file right now but may eventually be moved to FileObj

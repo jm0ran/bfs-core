@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import FileInterface from "./FileInterface";
+import FileInterface from "./interfaces/FileInterface";
 import FileModel from "./schema/FileSchema";
 import mongoose, { Document, Model } from "mongoose";
 
