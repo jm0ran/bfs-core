@@ -24,7 +24,7 @@ async function main(){
 
     dotenv.config();
     let scanner:Scanner = new Scanner(process.env.ROOT);
-    console.log(await scanner.shallowScan());
+    console.log(await scanner.shallowScan(process.env.ROOT));
 }
 
 main();

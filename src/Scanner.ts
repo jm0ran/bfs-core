@@ -5,7 +5,7 @@ import path from "path";
 /**
  * Files to be excluded from the scan
  */
-const SYSTEM_FILES = new Set<string>(["desktop.ini", ".DS_Store", ".localized"]);
+const SYSTEM_FILES = new Set<string>(["desktop.ini", ".DS_Store", ".localized", "$RECYCLE.BIN"]);
 
 /**
  * The scanner class will be responsible for collecting paths to construct file objects
@@ -29,21 +29,34 @@ class Scanner{
         
     }
     
-    public shallowScan():Promise<ScanInfo>{
+    /**
+     * Shallow scan scans only the files in the specified directory searching no deeper
+     * Will be the helper function for my deep scan function
+     * @returns ScanInfo object with data from the scan including file and directory paths
+     */
+    public shallowScan(topPath: string):Promise<ScanInfo>{
         return new Promise(async (res, rej) => {
             let result: ScanInfo = {
-                files: new Set<string>
+                files: new Set<string>,
+                dirs: new Set<string>
             }
-            let fsResult:string[] = fs.readdirSync(this.root);
+            let fsResult:string[] = fs.readdirSync(topPath);
             fsResult.forEach(file => {
-                let stats = fs.statSync(path.join(this.root, file));
-                if(!stats.isDirectory() && !SYSTEM_FILES.has(file)){
-                    result.files.add(path.join(this.root, file))
+                if(!SYSTEM_FILES.has(file)){
+                    let absolutePath = path.join(topPath, file);
+                    let stats = fs.statSync(absolutePath);
+                    if(stats.isDirectory()){
+                        result.dirs.add(absolutePath);
+                    }else{
+                        result.files.add(absolutePath)
+                    }
                 }
             });
             res(result);
         })
     }
+
+
 
 }
 
