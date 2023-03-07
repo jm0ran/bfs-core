@@ -7,6 +7,7 @@ import path from "path";
 import Database from "./Databse";
 import Scanner from "./Scanner";
 import * as dotenv from "dotenv";
+import ScanInfo from "./interfaces/ScanInfo";
 
 
 const fs = require("fs");
@@ -24,7 +25,10 @@ async function main(){
 
     dotenv.config();
     let scanner:Scanner = new Scanner(process.env.ROOT);
-    console.log(await scanner.shallowScan(process.env.ROOT));
+    // console.log(await scanner.shallowScan(process.env.ROOT));
+    let result:ScanInfo = await scanner.deepScan();
+    console.log(result);
+    console.log(result.files.size);
 }
 
 main();
