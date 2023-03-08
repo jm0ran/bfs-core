@@ -33,6 +33,7 @@ class Scanner{
     /**
      * Shallow scan scans only the files in the specified directory searching no deeper
      * Will be the helper function for my deep scan function
+     * Shouldn't really be called by user, but I'm leaving it public right now anyway
      * @returns ScanInfo object with data from the scan including file and directory paths
      */
     public shallowScan(topPath: string):Promise<ScanInfo>{
@@ -75,9 +76,6 @@ class Scanner{
             }
             res(mainResult);
         })
-        
-       
-
     }
 
 }

@@ -3,96 +3,65 @@ import path from "path";
 import fs from "fs";
 import FileInterface from "./interfaces/FileInterface";
 import FileModel from "./schema/FileSchema";
-import mongoose, { Document, Model } from "mongoose";
+import { FileDoc } from "./customTypes";
+import Database from "./Databse";
+
+
 
 /**
  * The file object class represents a singular file in the bfs system
  */
 class FileObj{
     /**
-     * Absolute Path of the file
+     * Holds document to be used to save once if the file already exists in the database
      */
-    private absolutePath:string;
-    /**
-     * File name with no path
-     */
-    private fileName: string;
-    /**
-     * Hash of file
-     */
-    private hash:string;
-    /**
-     * Extension of file
-     */
-    private extension:string;
-    /**
-     * Size of the file in bytes
-     */
-    private size:number;
-    /**
-     * Model for the file
-     */
-    private model:Model<FileInterface>;
+    private doc:FileDoc;
 
     /**
-     * Constructor for FileObj, should not be called by user, use int instead
+     * Constructor for FileObj
+     * Need to check if the object already exists in the database
+     * @param absolutePath Absolute path of the file to be constructed,
      */
-    private constructor(){
-        this.absolutePath = null;
-        this.fileName = null;
-        this.hash = null;
-        this.extension = null;
-        this.model = FileModel;
+    public constructor(absolutePath:string = null){
+        if(absolutePath == null){
+        }
+        else if(fs.existsSync(absolutePath)){
+            this.doc = new FileModel<FileInterface>({
+                absolutePath: path.resolve(absolutePath),
+                fileName: path.basename(absolutePath),
+                extension: path.extname(absolutePath),
+                hash: undefined,
+                size: undefined
+            })    
+        }else{
+            throw new Error("File does not exist");
+        }
     }
 
-
-    /**
-     * Forward facing FileObj creation method, 
-     */
-    public static init(absolutePath:string):Promise<FileObj>{
-        return new Promise(async (res, rej) => {
-            const newFile: FileObj = new FileObj();
-            if(fs.existsSync(absolutePath)){
-                newFile.absolutePath = path.resolve(absolutePath);
-                newFile.fileName = path.basename(absolutePath);
-                newFile.extension = path.extname(absolutePath);
-                let stats = fs.statSync(absolutePath);
-                newFile.size = stats.size;
-                await newFile.makeHash();
-                res(newFile);
-            }else{
-                rej(new Error(`Failed to read path: ${absolutePath}`));
-            }
-        })
-    }
 
     /**
      * Construct a new FileObject from a data object in the shape of FileInterface
      * @param data : Object in shape of file interface
      * @returns New file object
      */
-    public static fromData(data:FileInterface):FileObj{
-        const newFile: FileObj = new FileObj();
-        newFile.absolutePath = data.absolutePath;
-        newFile.fileName = data.fileName;
-        newFile.hash = data.hash;
-        newFile.extension = data.extension;
-        newFile.size = data.size;
-        return newFile;
+    public static fromData(data:FileDoc){
+        let file:FileObj = new FileObj();
+        file.doc = data;
+        return file;
     }
 
     /**
      * Hashes the file using sha256
      * @returns A promise resolving to the hash
      */
-    private async makeHash():Promise<string> {
+    public async makeHash():Promise<string> {
         return new Promise<string>((res, rej) => {
             let hash = crypto.createHash('sha256');
-            let stream = fs.createReadStream(this.absolutePath);
+            let stream = fs.createReadStream(this.doc.absolutePath);
             stream.on('data', (_buff:string) => { hash.update(_buff, 'utf8'); });
             stream.on('end', () => { 
-                this.hash = hash.digest('hex');
-                res(this.hash);
+                this.doc.hash = hash.digest('hex');
+                res(this.doc.hash);
             });
             stream.on("error", (err:string) => {
                 rej(err);
@@ -106,7 +75,7 @@ class FileObj{
      */
     public async existsDB():Promise<Boolean>{
         return new Promise(async(res, rej) => {
-            if(await FileModel.exists({hash: this.hash})){
+            if(await FileModel.exists({absolutePath: this.doc.absolutePath})){
                 res(true)
             }else{
                 res(false)
@@ -120,20 +89,8 @@ class FileObj{
      */
     public async saveDB():Promise<boolean>{
         return new Promise(async (res, rej) => {
-            if(!(await this.existsDB())){
-                let data: FileInterface = {
-                    absolutePath: this.absolutePath,
-                    fileName: this.fileName,
-                    hash: this.hash,
-                    extension: this.extension,
-                    size: this.size
-                }
-                let fileDoc:Document = new FileModel(data);
-                await fileDoc.save();
-                res(true);
-            }else{
-                res(false);
-            }
+            await this.doc.save();
+            res(true);
         })
     }
 
@@ -141,7 +98,7 @@ class FileObj{
      * @returns String representation of the object
      */
     public toString():string{
-        return `File: ${this.fileName} \n\t Path: ${this.absolutePath} \n\t Hash:${this.hash}`;
+        return `File: ${this.doc.fileName} \n\t Path: ${this.doc.absolutePath} \n\t Hash:${this.doc.hash}`;
     }
 }
 

@@ -1,11 +1,13 @@
+import mongoose from "mongoose";
+
 /**
  * Interface used for typescript so I can verify the type of model I'm using
  */
 interface FileInterface{
     absolutePath: string;
     fileName: string;
-    hash: string;
     extension: string;
+    hash: string;
     size: number;
 }
 

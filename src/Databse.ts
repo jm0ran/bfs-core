@@ -3,6 +3,7 @@ import mongoose, { Document } from "mongoose";
 import FileObj from "./FileObj";
 import FileModel from "./schema/FileSchema";
 import FileInterface from "./interfaces/FileInterface";
+import { FileDoc } from "./customTypes";
 
 /**
  * Database class to control searching and connection to the server
@@ -34,7 +35,25 @@ class Database{
             if(mongoose.connection.readyState != 1){
                 rej("Database is not in a connected state");
             }
-            let fileModel:FileInterface = (await FileModel.find({hash: hash}))[0];
+            let fileModel:FileDoc = (await FileModel.find({hash: hash}))[0];
+            if(fileModel == undefined){
+                res(null);
+            }else{
+                res(FileObj.fromData(fileModel));
+            }
+        })
+    }
+
+    /**
+     * Search database for a file by it's absolute path
+     * @returns A promise that resolves to a FileObj if found, null if not
+     */
+    public static async searchABP(absolutePath:String):Promise<FileObj>{
+        return new Promise(async (res, rej) => {
+            if(mongoose.connection.readyState != 1){
+                rej("Database is not in a connected state");
+            }
+            let fileModel:FileDoc = (await FileModel.find({absolutePath: absolutePath}))[0];
             if(fileModel == undefined){
                 res(null);
             }else{

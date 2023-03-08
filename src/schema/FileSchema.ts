@@ -9,23 +9,27 @@ import FileInterface from "../interfaces/FileInterface";
  * Mongoose File Schema
  * The data structure for how my file objects will be stored in the database
  */
-const FileSchema = new Schema({
-    absolutePath: String,
+const FileSchema = new Schema<FileInterface>({
+    absolutePath: {
+        type: String,
+        unique: true,
+    },
     fileName: String,
     hash: {
-        type: String,
-        unique: true
+        type: String
+        // unique: true,
+        // sparse: true
     },
-    extension: String
+    extension: String,
+    size: Number
     },
     {
         versionKey: false,
-    },
-    
+    }
 )
 
 
 
 const FileModel = model<FileInterface>("File", FileSchema);
-
+let document = new FileModel();
 export default FileModel;
