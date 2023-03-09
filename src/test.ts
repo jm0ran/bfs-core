@@ -14,9 +14,10 @@ const fs = require("fs");
 
 async function main(){
     await Database.connect();
+    await dotenv.config();
     console.log("connected")
     // let obj:FileObj = await Database.searchHash("da067b00098439ef20678d2bd257cadc505367a929e1e7154f00439ba5fac479");
-    let obj: FileObj = await Database.searchABP("/Users/jmoran/Documents/2.1-2.3 Notes.pdf");
+    let obj: FileObj = await Database.searchABP(process.env.TEST_FILE);
     await obj.processFile();
     console.log(obj);
     await obj.saveDB();
