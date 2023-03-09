@@ -66,7 +66,7 @@ class Database{
      * @param absolutePath Absolute path of the file
      * @returns return boolean indicating existance
      */
-    public static async existsDB(absolutePath: string):Promise<boolean>{
+    public static async existsABP(absolutePath: string):Promise<boolean>{
         return new Promise(async (res, rej) => {
             if(mongoose.connection.readyState != 1){
                 rej("Database is not in a connected state");

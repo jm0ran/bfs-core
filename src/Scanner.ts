@@ -73,7 +73,7 @@ class Scanner{
             const result:ScanInfo = await this.shallowScan(currentPath)
             const files: string[] = Array.from(result.files);
             for(let i = 0; i < files.length; i++){
-                if(!await Database.existsDB(files[i])){
+                if(!await Database.existsABP(files[i])){
                     await Database.createNew(files[i]);
                 }
             }
