@@ -1,10 +1,8 @@
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
-import FileInterface from "./interfaces/FileInterface";
 import FileModel from "./schema/FileSchema";
 import { FileDoc } from "./customTypes";
-import Database from "./Databse";
 
 
 

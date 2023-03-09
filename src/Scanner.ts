@@ -2,6 +2,8 @@ import ScanInfo from "./interfaces/ScanInfo";
 import fs from "fs";
 import path from "path";
 import { displayPartsToString } from "typescript";
+import Database from "./Databse";
+import mongoose from "mongoose";
 
 /**
  * Files to be excluded from the scan
@@ -64,17 +66,21 @@ class Scanner{
      * @param currentPath Current path the function is scanning to be used for recursion
      * @returns ScanInfo shaped object with all files found 
      */
-    public deepScan(mainResult:ScanInfo = { files: new Set<string>}, currentPath:string = this.root):Promise<ScanInfo>{
+    public deepScan(currentPath:string = this.root):Promise<void>{
         return new Promise(async (res, rej) => {
-            let result:ScanInfo = await this.shallowScan(currentPath)
-            result.files.forEach(file => {
-                mainResult.files.add(file);
-            })
+            if(mongoose.connection.readyState != 1){
+                rej("Database is not in a connected state");
+            }
+            const result:ScanInfo = await this.shallowScan(currentPath)
+            const files: string[] = Array.from(result.files);
+            for(let i = 0; i < files.length; i++){
+                await Database.createNew(files[i]);
+            }
             let dirs = Array.from(result.dirs);
             for(let i = 0; i < dirs.length; i++){
-                await this.deepScan(mainResult, dirs[i]);
+                await this.deepScan(dirs[i]);
             }
-            res(mainResult);
+            res();
         })
     }
 

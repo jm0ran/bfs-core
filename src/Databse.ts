@@ -2,8 +2,7 @@ import * as dotenv from "dotenv";
 import mongoose, { Document } from "mongoose";
 import FileObj from "./FileObj";
 import FileModel from "./schema/FileSchema";
-import FileInterface from "./interfaces/FileInterface";
-import { FileDoc } from "./customTypes";
+import { FileDoc, FileShape } from "./customTypes";
 
 /**
  * Database class to control searching and connection to the server
@@ -68,7 +67,11 @@ class Database{
      */
     public static async createNew(absolutePath:string):Promise<void>{
         return new Promise(async (res, rej) => {
-
+            const doc:FileDoc = new FileModel<FileShape>({
+                absolutePath: absolutePath
+            })
+            await doc.save();   
+            res();   
         })
     }
 

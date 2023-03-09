@@ -14,12 +14,15 @@ const fs = require("fs");
 
 async function main(){
     await Database.connect();
+    console.log("connected")
     // let obj:FileObj = await Database.searchHash("da067b00098439ef20678d2bd257cadc505367a929e1e7154f00439ba5fac479");
-    let obj: FileObj = await Database.searchABP("/Users/jmoran/Projects/bfs-core/package.json");
-    console.log(obj);
-    await obj.makeHash();
-    console.log(obj);
-    console.log(await obj.saveDB())
+    // let obj: FileObj = await Database.searchABP("/Users/jmoran/Documents/2.1-2.3 Notes.pdf");
+    // await obj.makeHash();
+    // await obj.saveDB();
+    // console.log(obj);
+    // await obj.makeHash();
+    // console.log(obj);
+    // console.log(await obj.saveDB())
     // console.log(await obj.existsDB());
 
     // let fileObj: FileObj = new FileObj(path.resolve("./tsconfig.json"));
@@ -31,15 +34,12 @@ async function main(){
     // await fileObj.makeHash();
     // await fileObj.saveDB();
 
+    // dotenv.config();
+    let scanner:Scanner = new Scanner(process.env.ROOT);
+    // await Database.createNew("Hi");
+    await scanner.deepScan();
 
     await Database.disconnect();
-
-    // dotenv.config();
-    // let scanner:Scanner = new Scanner(process.env.ROOT);
-    // // console.log(await scanner.shallowScan(process.env.ROOT));
-    // let result:ScanInfo = await scanner.deepScan();
-    // console.log(result);
-    // console.log(result.files.size);
 }
 
 main();

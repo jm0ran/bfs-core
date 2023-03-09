@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
-import FileInterface from "./interfaces/FileInterface";
 
-export type FileDoc = mongoose.Document<unknown, {}, FileInterface> & Omit<FileInterface & {
+export type FileDoc = mongoose.Document<unknown, {}, FileShape> & Omit<FileShape & {
     _id: mongoose.Types.ObjectId;
 }, never>;
+
+export type FileShape = {
+    absolutePath: string;
+    fileName?: string;
+    extension?: string;
+    hash?: string;
+    size?: number;
+}

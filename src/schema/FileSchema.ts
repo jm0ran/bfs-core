@@ -1,5 +1,5 @@
 import mongoose, { model, ObjectId, Schema } from "mongoose";
-import FileInterface from "../interfaces/FileInterface";
+import { FileShape } from "../customTypes";
 
 /**
  * File shcema is in it's own file right now but may eventually be moved to FileObj
@@ -9,7 +9,7 @@ import FileInterface from "../interfaces/FileInterface";
  * Mongoose File Schema
  * The data structure for how my file objects will be stored in the database
  */
-const FileSchema = new Schema<FileInterface>({
+const FileSchema = new Schema<FileShape>({
     absolutePath: {
         type: String,
         unique: true,
@@ -30,6 +30,6 @@ const FileSchema = new Schema<FileInterface>({
 
 
 
-const FileModel = model<FileInterface>("File", FileSchema);
+const FileModel = model<FileShape>("File", FileSchema);
 let document = new FileModel();
 export default FileModel;
