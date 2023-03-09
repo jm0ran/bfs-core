@@ -63,7 +63,7 @@ class Scanner{
      * Performs a deep scan of the root directry
      * @param mainResult Optional parameter to pass down reference as I will need to call the function recursively to get all files
      * @param currentPath Current path the function is scanning to be used for recursion
-     * @returns ScanInfo shaped object with all files found 
+     * @returns A promise resolving once the operation is complete
      */
     public deepScan(currentPath:string = this.root):Promise<void>{
         return new Promise(async (res, rej) => {

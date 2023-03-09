@@ -29,7 +29,7 @@ class FileObj{
      * Hashes the file using sha256
      * @returns A promise resolving to the hash
      */
-    public async makeHash():Promise<string> {
+    private async makeHash():Promise<string> {
         return new Promise<string>((res, rej) => {
             let hash = crypto.createHash('sha256');
             let stream = fs.createReadStream(this.doc.absolutePath);
@@ -41,6 +41,25 @@ class FileObj{
             stream.on("error", (err:string) => {
                 rej(err);
             })
+        })
+    }
+
+    /**
+     * Process a file and filling it's fields
+     * @returns A promise that resolves to void once the process has been completed
+     */
+    public processFile():Promise<void> {
+        return new Promise(async (res, rej) => {
+            if(fs.existsSync(this.doc.absolutePath)){
+                let stats = fs.statSync(this.doc.absolutePath);
+                this.doc.extension = path.extname(this.doc.absolutePath);
+                this.doc.fileName = path.basename(this.doc.absolutePath);
+                this.doc.size = stats.size;
+                await this.makeHash();
+                res();
+            }else{
+                rej("The file could not be found");
+            }
         })
     }
     
