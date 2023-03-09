@@ -39,7 +39,7 @@ class Database{
             if(fileModel == undefined){
                 res(null);
             }else{
-                res(FileObj.fromData(fileModel));
+                res(new FileObj(fileModel));
             }
         })
     }
@@ -57,8 +57,18 @@ class Database{
             if(fileModel == undefined){
                 res(null);
             }else{
-                res(FileObj.fromData(fileModel));
+                res(new FileObj(fileModel));
             }
+        })
+    }
+
+    /**
+     * Creates a new object in the databse
+     * @param absolutePath Absolute path of the file in question
+     */
+    public static async createNew(absolutePath:string):Promise<void>{
+        return new Promise(async (res, rej) => {
+
         })
     }
 

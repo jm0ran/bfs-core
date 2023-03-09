@@ -22,33 +22,10 @@ class FileObj{
      * Need to check if the object already exists in the database
      * @param absolutePath Absolute path of the file to be constructed,
      */
-    public constructor(absolutePath:string = null){
-        if(absolutePath == null){
-        }
-        else if(fs.existsSync(absolutePath)){
-            this.doc = new FileModel<FileInterface>({
-                absolutePath: path.resolve(absolutePath),
-                fileName: path.basename(absolutePath),
-                extension: path.extname(absolutePath),
-                hash: undefined,
-                size: undefined
-            })    
-        }else{
-            throw new Error("File does not exist");
-        }
+    public constructor(data: FileDoc){
+        this.doc = data;
     }
 
-
-    /**
-     * Construct a new FileObject from a data object in the shape of FileInterface
-     * @param data : Object in shape of file interface
-     * @returns New file object
-     */
-    public static fromData(data:FileDoc){
-        let file:FileObj = new FileObj();
-        file.doc = data;
-        return file;
-    }
 
     /**
      * Hashes the file using sha256
