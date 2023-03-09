@@ -7,7 +7,7 @@ import path from "path";
 import Database from "./Databse";
 import Scanner from "./Scanner";
 import * as dotenv from "dotenv";
-import ScanInfo from "./interfaces/ScanInfo";
+import { ScanInfo } from "./customTypes";
 
 
 const fs = require("fs");

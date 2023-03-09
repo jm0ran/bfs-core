@@ -62,6 +62,20 @@ class Database{
     }
 
     /**
+     * Checks is entry exists in the Database based on it's absolute path
+     * @param absolutePath Absolute path of the file
+     * @returns return boolean indicating existance
+     */
+    public static async existsDB(absolutePath: string):Promise<boolean>{
+        return new Promise(async (res, rej) => {
+            if(mongoose.connection.readyState != 1){
+                rej("Database is not in a connected state");
+            }
+            else res(await (await FileModel.find({absolutePath: absolutePath})).length > 0);
+        })
+    }
+
+    /**
      * Creates a new object in the databse
      * @param absolutePath Absolute path of the file in question
      */

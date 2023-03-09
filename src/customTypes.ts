@@ -11,3 +11,8 @@ export type FileShape = {
     hash?: string;
     size?: number;
 }
+
+export type ScanInfo = {
+    files: Set<string>,
+    dirs?: Set<string>
+}

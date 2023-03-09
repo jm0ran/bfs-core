@@ -1,9 +1,8 @@
-import ScanInfo from "./interfaces/ScanInfo";
-import fs from "fs";
+import { ScanInfo } from "./customTypes";
 import path from "path";
-import { displayPartsToString } from "typescript";
 import Database from "./Databse";
 import mongoose from "mongoose";
+import fs from "fs";
 
 /**
  * Files to be excluded from the scan
@@ -74,7 +73,9 @@ class Scanner{
             const result:ScanInfo = await this.shallowScan(currentPath)
             const files: string[] = Array.from(result.files);
             for(let i = 0; i < files.length; i++){
-                await Database.createNew(files[i]);
+                if(!await Database.existsDB(files[i])){
+                    await Database.createNew(files[i]);
+                }
             }
             let dirs = Array.from(result.dirs);
             for(let i = 0; i < dirs.length; i++){
