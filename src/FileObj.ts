@@ -2,7 +2,7 @@ import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import FileModel from "./schema/FileSchema";
-import { FileDoc } from "./customTypes";
+import { FileDoc, FileShape } from "./customTypes";
 
 
 
@@ -48,7 +48,7 @@ class FileObj{
      * Process a file and filling it's fields
      * @returns A promise that resolves to void once the process has been completed
      */
-    public processFile():Promise<void> {
+    public processFile():Promise<boolean> {
         return new Promise(async (res, rej) => {
             if(fs.existsSync(this.doc.absolutePath)){
                 let stats = fs.statSync(this.doc.absolutePath);
@@ -56,9 +56,9 @@ class FileObj{
                 this.doc.fileName = path.basename(this.doc.absolutePath);
                 this.doc.size = stats.size;
                 await this.makeHash();
-                res();
+                res(true);
             }else{
-                rej("The file could not be found");
+                res(false);
             }
         })
     }
@@ -86,6 +86,19 @@ class FileObj{
             await this.doc.save();
             res(true);
         })
+    }
+
+    /**
+     * @returns JSON representation of the fileObject
+     */
+    public toJSON():FileShape{
+        return {
+            absolutePath: this.doc.absolutePath,
+            fileName: this.doc.fileName,
+            extension: this.doc.extension,
+            hash: this.doc.hash,
+            size: this.doc.size
+        }
     }
 
     /**
