@@ -39,9 +39,8 @@ async function main(){
     // await fileObj.saveDB();
 
     // dotenv.config();
-    let scanner:Scanner = new Scanner(process.env.ROOT);
     // await Database.createNew("Hi");
-    await scanner.deepScan();
+    await Scanner.deepScan();
 
     await Database.disconnect();
 }

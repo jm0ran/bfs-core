@@ -13,7 +13,6 @@ class Database{
      * @returns A mongoose promise
      */
     public static async connect():Promise<typeof mongoose>{
-        dotenv.config();
         return mongoose.connect(process.env.DB_CONN_STRING);
     }
 

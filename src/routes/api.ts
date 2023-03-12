@@ -1,6 +1,7 @@
 import express from "express"
 import Database from "../Databse";
 import FileObj from "../FileObj";
+import Scanner from "../Scanner";
 
 let APIRouter = express.Router();
 
@@ -56,5 +57,11 @@ APIRouter.post('/getFileByABP', async (req, res) => {
     res.status(200);
     res.send(JSON.stringify(data));
  })
+
+ APIRouter.post("/deepScan", (async (req, res) => {
+    let added = await Scanner.deepScan();
+    res.status(200);
+    res.send({newFiles: added});
+ }))
 
 export default APIRouter;

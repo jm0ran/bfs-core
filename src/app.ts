@@ -1,6 +1,7 @@
 import Database from "./Databse"
 import APIRouter from "./routes/api"
 import bodyParser from "body-parser"
+import * as dotenv from "dotenv";
 
 
 const express = require('express')
@@ -9,6 +10,7 @@ const port = 3000
 
 //Make sure I'm connected to the database and all that
 const start = async ():Promise<void> => {
+  dotenv.config();
   await Database.connect();
   app.use(express.json());
   app.use(bodyParser.json())

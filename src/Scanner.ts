@@ -14,30 +14,12 @@ const SYSTEM_FILES = new Set<string>(["desktop.ini", ".DS_Store", ".localized", 
  */
 class Scanner{
     /**
-     * Store the root path that the scanner scans from
-     */
-    private root:string;
-
-    /**
-     * Constructor for scanner
-     * @param root Takes in root for the scanner
-     */
-    public constructor(root:string){
-        if(fs.existsSync(root)){
-            this.root = root;
-        }else{
-            throw new Error(`Failed to read path: ${root}`);
-        }
-        
-    }
-    
-    /**
      * Shallow scan scans only the files in the specified directory searching no deeper
      * Will be the helper function for my deep scan function
      * Shouldn't really be called by user, but I'm leaving it public right now anyway
      * @returns ScanInfo object with data from the scan including file and directory paths
      */
-    public shallowScan(topPath: string):Promise<ScanInfo>{
+    public static shallowScan(topPath: string):Promise<ScanInfo>{
         return new Promise(async (res, rej) => {
             let result: ScanInfo = {
                 files: new Set<string>,
@@ -65,23 +47,26 @@ class Scanner{
      * @param currentPath Current path the function is scanning to be used for recursion
      * @returns A promise resolving once the operation is complete
      */
-    public deepScan(currentPath:string = this.root):Promise<void>{
+    public static deepScan(currentPath:string = process.env.ROOT):Promise<number>{
         return new Promise(async (res, rej) => {
             if(mongoose.connection.readyState != 1){
                 rej("Database is not in a connected state");
             }
+            let added:number = 0;
             const result:ScanInfo = await this.shallowScan(currentPath)
             const files: string[] = Array.from(result.files);
             for(let i = 0; i < files.length; i++){
                 if(!await Database.existsABP(files[i])){
+                    added++;
                     await Database.createNew(files[i]);
                 }
             }
             let dirs = Array.from(result.dirs);
             for(let i = 0; i < dirs.length; i++){
-                await this.deepScan(dirs[i]);
+                let additional = await this.deepScan(dirs[i]);
+                added += additional;
             }
-            res();
+            res(added);
         })
     }
 
