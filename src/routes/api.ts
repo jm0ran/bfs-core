@@ -1,5 +1,6 @@
 import express from "express"
 import Database from "../Databse";
+import FileObj from "../FileObj";
 
 let APIRouter = express.Router();
 
@@ -45,6 +46,15 @@ APIRouter.post('/getFileByABP', async (req, res) => {
             res.send((fileObj.toJSON()));
         }
     }
+ })
+
+ /**
+  * Get all the files in the database
+  */
+ APIRouter.post("/getFiles", async (req, res) => {
+    let data:FileObj[] = await Database.getFiles();
+    res.status(200);
+    res.send(JSON.stringify(data));
  })
 
 export default APIRouter;

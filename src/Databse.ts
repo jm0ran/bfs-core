@@ -74,6 +74,22 @@ class Database{
             else res(await (await FileModel.find({absolutePath: absolutePath})).length > 0);
         })
     }
+    
+    /**
+     * @returns A promise that resolve to an array of all the fileobjects in the database
+     */
+    public static async getFiles():Promise<FileObj[]>{
+        return new Promise(async (res, rej) => {
+            if(mongoose.connection.readyState != 1){
+                rej("Database is not in a connected state");
+            }
+            const result:FileObj[] = new Array();
+            (await FileModel.find({})).map(doc => {
+                result.push(new FileObj(doc));
+            })
+            res(result);
+        })
+    }
 
     /**
      * Creates a new object in the databse
