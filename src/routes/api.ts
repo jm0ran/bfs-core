@@ -58,6 +58,9 @@ APIRouter.post('/getFileByABP', async (req, res) => {
     res.send(JSON.stringify(data));
  })
 
+ /**
+  * Run a deep scan on the database
+  */
  APIRouter.post("/deepScan", (async (req, res) => {
     let added = await Scanner.deepScan();
     res.status(200);
